@@ -1,0 +1,501 @@
+body {
+    overflow: hidden;
+}
+.map {
+    height: calc(100vh);
+    width: 100%;
+}
+
+
+.login-icon {
+    font-size: 15px;
+    text-decoration: none;
+    margin-right: 5px;
+    padding: 0 5px;
+}
+.register-icon{
+    font-size: 15px;
+    text-decoration: none;
+    margin-right: 0;
+    padding: 0 5px;
+
+}
+
+.search-box {
+    position: absolute;
+    left: 6px;
+    top: 20px;
+    z-index: 100;
+    width: 350px;
+   
+}
+#ship-detail-box {
+    position: absolute;
+    left: -10rem;
+    top: 55px;
+   
+}
+
+.search-box .form-control{
+   font-size: 15px;
+   border-radius: 0;
+}
+.search-box .btn{
+    padding: 5px 10px!important;
+    font-size: 15px !important;
+ }
+
+.ship-menu {
+  
+    background-color: #fff;
+    border-radius: 0;
+    font-size: 13px;
+    box-shadow: 0 2px 2px rgba(0,0,0,.25);
+}
+
+.ship-menu div {
+    cursor: pointer;
+    padding: 3px 14px;
+    color: #666;
+}
+.ship-menu div:hover {
+    color: #007bff !important;
+}
+
+
+.ship-menu i{
+    margin-right: 5px;  
+}
+
+    
+#selector-box, #layer-show-box, #hydrometeorology-box, #my-target-box {
+    position: absolute;
+    top: 0; 
+    right: 13rem;
+    left: unset;
+    width: 30%;
+    height: unset;
+}
+
+#selector-box {
+    height: 500px;
+}
+
+
+.modal-body .sub-title{
+    margin: 16px 0 0 -5px;
+}
+.modal-body .row .col{
+    padding: 2px;
+    margin: 10px;
+    text-align: center;
+    background: #ddd;
+    font-size: 15px;
+    color: #666;
+    cursor: pointer;
+}
+.modal-body .row .col i{
+    margin-right: 5px; 
+}
+
+.ol-zoom {
+    left: unset;
+    right: 10px;
+    top: 180px !important;
+    width: 30px;
+    font-size: 18px;
+    
+}
+
+.ol-control {
+    background-color: unset;
+    border-radius: 0;
+}
+.ol-control:hover {
+    background-color: unset;
+}
+
+.ol-control button {
+    background-color: #fff;
+    color: #666;
+    
+}
+
+.ol-control button:hover {
+    background-color: #fff;
+    color: blue;
+}
+.ol-control button:focus {
+    background-color: #fff;
+    border: unset;
+    outline:0;
+}
+
+.side-menu {
+    position: absolute;
+    right: 9px;
+    top: 306px;
+    z-index: 1000;
+    background-color: #fff;
+    
+}
+.side-menu button {
+    padding: 1px;
+    color: #666;
+    border-radius: 0; 
+    margin: 12px 0;
+}
+
+.side-menu button i{
+    padding: 1px;
+    font-size: 18px;
+}
+.side-menu button:hover {
+    color: blue;
+}
+.btn.focus, .btn:focus {
+    box-shadow: none;
+}
+
+.swtich-box-shadow {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    height: 75px;
+    background: #fff;
+    z-index: 1000;
+    opacity: .5;
+    width: 120px;
+    
+}
+
+.swtich-map-box {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    z-index: 10001;
+}
+
+.sea-map {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    z-index: 10004;
+    opacity: 1;
+    border: 2px solid #FFF;
+}
+.earth-map {
+    position: absolute;
+    right: 20px;
+    bottom: 5px;
+    z-index: 10003;
+    opacity: .5;
+    border: 2px solid #FFF;
+}
+.satellite-map {
+    position: absolute;
+    right: 30px;
+    bottom: 5px;
+    z-index: 10002;
+    opacity: .5;
+    border: 2px solid #FFF;
+}
+
+
+.map-type-box:hover{
+    border: 2px solid yellow;
+   
+}
+.selected-border {
+    border: 2px solid yellow;
+}
+
+
+#position-modal {
+    left: 62em;
+    top: 7em;
+    width: 30%;
+}
+.ol-full-screen {
+    left: unset;
+    right: 7px;
+    top: unset;
+    bottom: 50rem;
+    border-radius: 0;
+}
+#typeMeasure {
+    display: none;
+    position: absolute;
+    right: 40px;
+    top: 556px;
+    width: 80px;
+}
+
+#ship-signal-modal {
+    width: 300px;
+    position: absolute;
+    right: 40px;
+    top: 50px;
+    left: unset;
+}
+#weather-box {
+    width: 300px;
+    position: absolute;
+    right: 16rem;
+    top: 230px;
+    left: unset;
+    height: unset;
+}
+#weather-box .modal-header{
+   padding: 0.5em 0.5em;
+}
+#weather-box .list-group-item{
+    padding: 0 0;
+    border-bottom: unset;
+}
+#weather-box .col {
+    padding-left: 0;
+    padding-right: 0;
+}
+#weather-box .row .col-8 {
+    padding-left: 0;
+    padding-right: 0;
+}
+#weather-box .row .col {
+   background-color: #fff;
+   margin: 6px;
+}
+
+.ol-zoom .ol-zoom-in {
+    border-radius: 0;
+}
+.ol-zoom .ol-zoom-out {
+    border-radius: 0;
+}
+.modal-content {
+    border-radius: 0;
+}
+.modal-header {
+    padding: 10px 10px 10px 21px;
+}
+.ship-menu-active {
+    
+    color: #007bff !important;
+    
+
+}
+.ol-mouse-position{
+    position: relative;
+}
+.mouse-position{
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 2px rgba(0,0,0,0.25);
+    margin: 0;
+    color: #333;
+    margin-right: 10px;
+    border-radius: 3px;
+    width: 100px;
+    height: 50px;
+    position: absolute;
+    left:10px;
+    bottom: 35px;
+    top: unset;
+}
+
+.lat,.lng{
+    width: 100%;
+    font-size: 12px;
+    font-family: "Microsoft Yahei";
+    text-align: right;
+    user-select: none;
+}
+
+  
+.search-btn {
+    background-color: #212529;
+    color: #fff;
+    border: 1px solid #212529;
+}
+
+.search-btn:hover {
+    background-color: #212529;
+    color: #fff;
+    border: 1px solid #212529;
+}
+
+#ship-detail-box .modal-body {
+    padding: 0;
+    /* height: 400px; */
+    
+}
+
+
+#ship-detail-box .list-group-item {
+    border-bottom: none;
+    padding: 0 20px 10px 10px; 
+    font-size: 13px;
+}
+#ship-detail-box .list-group-item label{
+   color: #666;
+   margin-right: 5px;
+}
+
+
+.sailing-item  {
+    text-align: center;
+   
+}
+.sailing-item  p{
+   margin-bottom: 0;
+   padding-bottom: 0;
+   font-size: 12px;
+}
+
+.sailing-item  .city{
+    font-size: 18px;
+    font-weight: bold;
+ }
+ .sailing-item .row {
+     border-bottom: 1px solid #ddd;
+     padding-top: 30px;
+     padding-bottom: 40px;
+ }
+ .sailing-item .sailing-msg {
+  
+    padding: 20px 10px;
+}
+.sailing-item .sailing-msg span{
+    margin-right: 50px;
+    font-size: 14px;
+}
+
+#weather-box i{
+    font-size: 20px;
+}
+.login-box {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    z-index: 10000;
+}
+.login-box img {
+   border-radius: 50%;
+   width: 50px;
+   height: 50px;
+}
+.tools-controls {
+    background-color: #fff !important;
+    font-size: 14px;
+    padding: 5px;
+    position: absolute;
+    top: 28px;
+    right: 100px;
+    color: #666;
+    cursor: pointer;
+}
+.tools-controls:hover {
+    color: #007bff !important;
+}
+
+.tools-controls i {
+    font-size: 14px;
+   
+    padding: 5px;
+}
+.tools {
+    z-index: 1000;
+    position: absolute;
+    top: 62px;
+    right: 98px;
+    border-top: none;
+}
+.tools .card-body{
+   padding: 0;
+}
+.login-collapse {
+    
+    z-index: 1000;
+    position: absolute;
+    top: 70px;
+    right: 30px;
+
+    
+
+
+}
+.login-collapse .card-body {
+    padding: 0;
+   
+    
+
+}
+
+.login-collapse a{
+    padding: 4px 10px;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+
+/* .switcher {
+   
+    
+} */
+.switcher .switcher-header {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    height: 50px;
+    line-height: 50px;
+    
+}
+.switcher .switcher-header .switch-header-item{
+    float: left; 
+    text-align: center;
+    width: 66px;
+    margin: 0 10px;
+    cursor: pointer;
+ }
+ 
+ .switcher-header-item-active {
+    border-bottom: 2px solid blue;
+    color: blue;
+    font-weight: bold;
+}
+#my-target-box .modal-body {
+    padding: 0;
+}
+#my-target-box .my-target-header {
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #ddd;
+}
+.target-header-title {
+    display: inline-block;
+}
+.search-result {
+    width: 312px;
+    position: absolute;
+    left: 7px;
+    top: 60px;
+    z-index: 1000;
+    background-color: #fff;
+    color: #000;
+    
+
+}
+.search-result div {
+    padding: 0 15px;
+    height: 50px;
+    line-height: 50px;
+    cursor: pointer;
+    z-index: 1000;
+}
+.search-result div:hover {
+    background-color: thistle;
+}
+
+
+
+
+
+

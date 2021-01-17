@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>software - Layui</title>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="layui/css/layui.css">
+  <script src="layui/js/jquery-3.3.1.min.js"></script>
+  <script>
+    function reqFind(){
+        $.ajax({
+          url: "http://localhost:8080/COM/findAllCOM"
+        })  
+    }
+    function openCOMPort(){
+        $.ajax({
+          url: "http://localhost:8080/COM/openCOMPort/COM1/19200"
+        })  
+    }
+    function closeCOMPort(){
+        $.ajax({
+          url: "http://localhost:8080/COM/closeCOMPort"
+        })  
+    }
+    
+</script>
+</head>
+<body class="layui-layout-body">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>通讯设置</legend>
+        <div>
+          <button type="button" class="layui-btn layui-btn-normal" onclick="reqFind()">查询串口</button>
+          <button type="button" class="layui-btn layui-btn-warm" onclick="openCOMPort()">打开串口</button>
+          <button type="button" class="layui-btn layui-btn-danger" onclick="closeCOMPort()">关闭串口</button>
+        </div>
+      </fieldset>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+
+    <div class="demoTable">
+      搜索ID：
+      <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+      </div>
+      <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
+
+    <form class="layui-form" id="submit" style="display:none" action="http://localhost:8080/insert">
+      <div class="layui-form-item">
+          <label class="layui-form-label layui-required">*船舶呼号</label>
+          <div class="layui-input-block">
+              <input type="text" name="id"  lay-verify="required" placeholder="请输入船舶呼号" autocomplete="on" class="layui-input" id="id" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">MMSI</label>
+          <div class="layui-input-block">
+              <input type="text" name="mmsi"    placeholder="请输入MMSI" autocomplete="on" class="layui-input" id="mmsi" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">IMO</label>
+          <div class="layui-input-block">
+              <input type="text" name="imo"    placeholder="请输入IMO" autocomplete="on" class="layui-input" id="imo" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">船舶类型</label>
+          <div class="layui-input-block">
+              <input type="text" name="type"    placeholder="请输入船舶类型" autocomplete="on" class="layui-input" id="type" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">船舶名称</label>
+          <div class="layui-input-block">
+              <input type="text" name="name"    placeholder="请输入船舶名称" autocomplete="on" class="layui-input" id="name" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">船主</label>
+          <div class="layui-input-block">
+              <input type="text" name="owner"    placeholder="请输入船主" autocomplete="on" class="layui-input" id="owner" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">长度</label>
+          <div class="layui-input-block">
+              <input type="text" name="length"    placeholder="请输入长度" autocomplete="on" class="layui-input" id="length" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">宽度</label>
+          <div class="layui-input-block">
+              <input type="text" name="width"    placeholder="请输入宽度" autocomplete="on" class="layui-input" id="width" style="width:250px">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">吃水</label>
+          <div class="layui-input-block">
+              <input type="text" name="draft"    placeholder="请输入吃水" autocomplete="on" class="layui-input" id="draft" style="width:250px">
+          </div>
+      </div>
+      <button style="display: none" lay-submit  id="tijiao" >立即提交</button>
+  </form>
+
+    <table class="layui-hide" id="vessellist" lay-filter="vessellist"></table>
+ 
+    <script type="text/html" id="toolbar">
+      <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        <button class="layui-btn layui-btn-sm" lay-event="insert">添加数据</button>
+      </div>
+    </script>
+    <script type="text/html" id="opBar">
+      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+                  
+              
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 --> 
+     
+    <script>
+    layui.use('table', function(){
+      var table = layui.table;
+      
+      //温馨提示：默认由前端自动合计当前行数据。从 layui 2.5.6 开始： 若接口直接返回了合计行数据，则优先读取接口合计行数据。
+      //详见：https://www.layui.com/doc/modules/table.html#totalRow
+      table.render({
+        elem: '#vessellist'
+        ,url:'http://localhost:8080/vessellist'
+        ,toolbar: '#toolbar'
+        ,title: '船舶静态信息数据表'
+        ,cellMinWidth: 90
+        ,cols: [[
+        {type: 'checkbox', fixed: 'left'}
+        ,{field:'id', title:'船舶呼号', fixed:'left'}
+        ,{field:'mmsi', title:'水上移动通信业务标识码', fixed: 'left', edit: 'text'}
+        ,{field:'imo', title:'IMO', fixed:'left', edit: 'text'}
+        ,{field:'type', title:'类型', edit: 'text'}
+        ,{field:'name', title:'船名', edit: 'text'}
+        ,{field:'owner', title:'船主', edit: 'text'}
+        ,{field:'length', title:'长度', edit: 'text'}
+        ,{field:'width', title:'宽度', edit: 'text'}
+        ,{field:'draft', title:'吃水', edit: 'text'}
+        ,{fixed:'right', title:'操作', toolbar:'#opBar', width:80, fixed:'right'}
+        ]]
+        ,id: 'testReload'
+        ,page: true
+      });
+      
+      //工具栏事件
+      table.on('toolbar(vessellist)', function(obj){
+        var checkStatus = table.checkStatus(obj.config.id);
+        switch(obj.event){
+          case 'getCheckData':
+            var data = checkStatus.data;
+            layer.alert(JSON.stringify(data));
+          break;
+          case 'getCheckLength':
+            var data = checkStatus.data;
+            layer.msg('选中了：'+ data.length + ' 个');
+          break;
+          case 'isAll':
+            layer.msg(checkStatus.isAll ? '全选': '未全选')
+          break;
+          case 'insert':
+                    layer.open({
+                        type:1,
+                        area:['450px','600px'],
+                        title: 'tianxie'
+                        ,content: $("#submit"),
+                        shade: 0,
+                        btn: ['提交', '取消']
+                        ,btn1: function(index, layero){
+                            //点击确认触发 iframe 内容中的按钮提交
+                            // var frm = layero.find('iframe').contents().find("#tijiao");
+                            // alert("hhhhhh")
+                            $("#tijiao").click()
+                            // frm.click();
+                            layer.close(index)
+                            // self.location='statictable.html'
+                            // table.reload()
+                        },
+                        btn2: function(index, layero){
+                            // alert("2222");
+                            layer.closeAll();
+                        },
+
+                    });
+        };
+      });
+
+      //监听工具条
+      table.on('tool(vessellist)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'del'){
+          layer.confirm('真的删除行么', function(index){
+            obj.del();
+            layer.close(index);
+            $.ajax({
+              url: "http://localhost:8080/staticDel?id="+data.id
+            })            
+          });
+        } else if(obj.event === 'edit'){
+          layer.alert('编辑行：<br>'+ JSON.stringify(data))
+        }
+      });
+
+      //监听单元格编辑
+        table.on('edit(vessellist)', function (obj) {
+
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+
+            $.ajax({
+                url: "http://localhost:8080/updatename",
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                });
+
+            layer.msg('[ID: ' + data.vesselid + '] ' + field + ' 字段更改为：' + value);
+        });
+
+      var $ = layui.$, active = {
+      reload: function(){
+        var demoReload = $('#demoReload');
+        
+        //执行重载
+        table.reload('testReload', {
+          page: {
+            curr: 1 //重新从第 1 页开始
+          }
+          ,where: {
+            // key: {
+              id: demoReload.val()
+            // }
+          }
+        }, 'data');
+      }
+    };
+    
+    $('.demoTable .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      // console.log(type);
+      active[type] ? active[type].call(this) : '';
+      // console.log(active[type]);
+    });
+  });
+    </script>
+</body>
+</html>

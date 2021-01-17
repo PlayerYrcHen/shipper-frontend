@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <base href="/">
+    <link rel="stylesheet" href="layui/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="layui/css/bootstrap.min.css">
+    <link rel="stylesheet" href="layui/css/ship.css">
+    <link rel="stylesheet" href="layui/css/all.min.css">
+    <link rel="stylesheet" href="layui/css/fontawesome.min.css">
+    <link rel="stylesheet" href="layui/css/solid.min.css">
+    <script src="./js/ol.js"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery-ui.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/ship.js"></script>
+    <title>北部湾船联网</title>
+    <style type="text/css">
+      /* 全局CSS*/
+      *{margin:0px; padding:0px;}
+      /* 实例CSS */
+      html{ height:100%; _background:url(about:blank);} /*阻止闪动 in IE6 , 把空文件换成about:blank , 减少请求*/
+      body{ height:100%; font-size:12px; font-family:Arial,Tahoma,sans-serif; background:#E2E2E2;}
+      
+      #header{
+          position:fixed; top:0; right:0;z-index:100;
+          _position:absolute;
+      }
+      #headerContent {
+          width:630px;  background:#E2E2E2; border-bottom:2px solid #409F89;border-left:2px solid #409F89;
+      }
+      #map { height: 100%;z-index:10}
+      table tr td { height:20px;    }
+    
+      </style>
+
+  </head>
+  <body>
+
+      <div class="input-group mb-3 search-box input-group-lg">
+        <input type="text" class="form-control" placeholder="港口、船舶" id="searcher" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <div class="input-group-append">
+          <button class="btn search-btn bg-primary" type="button" id="modalOpen"><i class="fas fa-search"></i></button>
+        </div>
+      </div>
+
+      <!-- 搜索船舶弹出框 -->
+      <div class="search-result"></div>
+      
+      <!-- 船舶详细信息弹出框 -->
+      <div class="modal fade" id="ship-detail-box" role="dialog" data-backdrop="false">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">船舶信息</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="switcher">
+                <div class="switcher-header">
+                  <div class="switch-header-item switcher-header-item-active" index="0">动态信息</div>
+                  <div class="switch-header-item" index="1">静态信息</div>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="switcher-body">
+                  <div class="switch-body-item" index="0">
+                    <div class="row mt-3 ml-1 ais-item">
+                      <div class="col-5">
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item"><label>船舶代码:</label><span class="1"></span></li>
+                          <li class="list-group-item"><label>时间格式:</label><span class="2"></spanclass="1"></li>
+                          <li class="list-group-item"><label>接收时间:</label><span class="3"></span></li>
+                          <li class="list-group-item"><label>航向（cog):</label><span class="4"></span></li>
+                          <li class="list-group-item"><label>航速:</label><span class="5"></span></li>
+                          <li class="list-group-item"><label>经度:</label><span class="6"></span></li>
+                          <li class="list-group-item"><label>纬度:</label><span class="7"></span></li>
+                          <li class="list-group-item"><label>气温:</label><span class="8"></span></li>
+                          <li class="list-group-item"><label>湿度:</label><span class="9"></span></li>
+                        </ul>
+                      </div>
+                      <div class="col-7">
+                        <ul class="list-group list-group-flush">
+                          
+                          <li class="list-group-item"><label>压力:</label><span class="10"></span></li>
+                          <li class="list-group-item"><label>能见度:</label><span class="11"></span></li>
+                          <li class="list-group-item"><label>风速:</label><span class="12"></span></li>
+                          <li class="list-group-item"><label>风向:</label><span class="13"></span></li>
+                          <li class="list-group-item"><label>水温:</label><span class="14"></span></li>
+                          <li class="list-group-item"><label>盐度:</label><span class="15"></span></li>
+                          <li class="list-group-item"><label>电压:</label><span class="16"></span></li>
+                          <li class="list-group-item"><label>机箱温度:</label><span class="17"></span></li>
+                        </ul>
+                      </div>
+                    </div>
+                   
+                  </div>
+                  <div class="switch-body-item" index="1">
+                    <div class="row mt-3 ml-1 meteorological-item">
+                      <div class="col-5">
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item"><label>船舶代码:</label><span class="1">17729840945</span></li>
+                          <li class="list-group-item"><label>类型:</label><span class="2">其他</span></li>
+                          <li class="list-group-item"><label>船长:</label><span class="3">61米</span></li>
+                          <li class="list-group-item"><label>船宽:</label><span class="4">13米</span></li>
+                          <li class="list-group-item"><label>吃水:</label><span class="5">5.5米</span></li>
+                        </ul>
+                      </div>
+                      <div class="col-7">
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item"><label>船名:</label><span class="6">16度</span></li>
+                          <li class="list-group-item"><label>船主:</label><span class="7">20米</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                
+                </div>
+              </div>
+          
+            </div>
+          </div>
+        </div>
+      </div>
+      
+   
+      <!-- 登录工具栏 -->
+      <div class="login-box" data-toggle="collapse" data-target="#collapselogin" aria-expanded="false" aria-controls="collapselogin">
+        <img src="./img/login.png" alt="">
+      </div>
+      <!-- 登录弹出框 -->
+      <div class="collapse login-collapse" id="collapselogin">
+        <div class="card card-body">
+          <a href="#" class="border-bottom"><i class="fas fa-user login-icon"></i>登录</a>
+          <a href="#" class=""><i class="fas fa-user-plus register-icon"></i>注册</a>
+        </div>
+      </div>
+      <div id="map" class="map"><div id="info"></div></div>
+      
+      <!-- 鼠标经纬度 -->
+      <div class="mouse-position" id="mouse-position">
+        <div class="lat" id="lat"></div>
+        <div class="lng" id="lng"></div>
+      </div>
+
+      <!-- 工具箱 -->
+      <a class="tools-controls border" data-toggle="collapse" role="button" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        <i class="fas fa-archive"></i>工具箱
+        <i class="fas fa-caret-down"></i>
+      </a>
+      <!-- 工具箱弹出框 -->
+      
+      <div class="collapse tools" id="collapseExample">
+        <div class="card card-body">
+          <div class="ship-menu">
+            <!-- <div target="#ship-detail-box" class="border-bottom"><i class="fas fa-compass"></i>地点标记</div> -->
+            <div target="#layer-show-box" class="border-bottom"><i class="fas fa-layer-group"></i>图层显示</div>
+            <div target="#hydrometeorology-box"><i class="fas fa-smog"></i>水文气象</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 水文气象弹出框 -->
+    <div class="modal fade first-modal" id="hydrometeorology-box" role="dialog" data-backdrop="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">水文气象</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <div class="sub-title">全球气象</div>
+              <div class="row">
+                <div class="col" data-toggle="modal" data-target="#weather-box"><i class="fas fa-temperature-low"></i>气温</div>
+                <div class="col" data-toggle="modal" data-target="#weather-box"><i class="fas fa-temperature-high"></i>水温</div>
+              </div>
+              <div class="row">
+                <div class="col" data-toggle="modal" data-target="#weather-box"><i class="fas fa-tint"></i>湿度</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- 图层显示弹出框 -->
+    <div class="modal fade first-modal" id="layer-show-box" role="dialog" data-backdrop="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">图层显示</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <p class="sub-title">船位</p>
+                <div class="row">
+                <div class="col ship-point"><i class="fas fa-chess-board"></i>船舶绿点</div>
+                <div class="col"></div>
+              </div>
+              <p class="sub-title">轨迹热力图</p>
+              <div class="row">
+                <div class="col">散货十万吨以上</div>
+                <div class="col">邮轮十万吨以上</div>
+                <div class="col">集装箱5千箱以上</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="headerContent">	
+            <div style="width:608px; padding-top:10px; padding-left:10px; height:130px; margin-right:10px; padding-right:10px; border-top:2px solid #409f89; border-right:2px solid #409F89; ">
+              <h6>CSVALUE</h6>
+              <table>
+                        <tr>
+                            <td>SymbolSet:</td>
+                            <td><select id="selChart5" onchange="javascript: refreshChart();" style=" width:90px;"><option value="1">Traditional</option><option value="2">Simplified</option></select></td>
+                            <td>Safety Contour:</td>
+                            <td><input id="txtChart1" type="text" value="10" onchange="javascript: refreshChart();" style="width:60px;" /></td>
+                            <td>Shallow Contour:</td>
+                            <td><input id="txtChart2" type="text" value="5" onchange="javascript: refreshChart();" style="width:60px;"/></td>
+                        </tr>
+                         <tr>
+                            <td>DisplayCategory:</td>
+                            <td><select id="selChart6" onchange="javascript: refreshChart();" style=" width:90px;"><option value="1" selected="selected">Base</option><option value="2" >Standard</option><option value="3">All</option></select></td>
+                            <td>Deep Contour:</td>
+                            <td><input id="txtChart3" type="text" value="20" onchange="javascript: refreshChart();" style="width:60px;"/></td>
+                            <td>Safety Depth:</td>
+                            <td><input id="txtChart4" type="text" value="10" onchange="javascript: refreshChart();" style="width:60px;"/></td>
+                        </tr>
+                        <tr>
+                            <td>ColorScheme:</td>
+                            <td><select id="selChart7" onchange="javascript: refreshChart();" style=" width:90px;"><option value="1">Day</option><option value="2">Dusk</option><option value="3">Night</option></select></td>
+                            <td>Text Scale:</td>
+                            <td><input id="txtChart8" type="text" value="100000000" onchange="javascript: refreshChart();" style="width:60px;"/></td>
+                            <td>Shallow Sounding Scale:</td>
+                            <td><input id="txtChart9" type="text" value="100000000" onchange="javascript: refreshChart();" style="width:60px;"/></td>
+                        </tr>
+                        <tr>
+                            <td>Layer Strategy:</td>
+                            <td><select id="selChart11" onchange="javascript: refreshChart();" style=" width:90px;"><option value="0">Layer by Layer</option><option value="1" selected="selected">Combined</option></select></td>
+                            <td>Deep Sounding Scale:</td>
+                            <td><input id="txtChart10" type="text" value="100000000" onchange="javascript: refreshChart();" style="width:60px;"/></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+              </table>
+            </div>
+            <div style="float:left; width:116px; padding-top:10px; padding-left:10px; height:130px; padding-right:10px;border-top:2px solid #409f89; border-right:2px solid #409F89; ">
+              <h6>Map Type</h6>
+                    <table>
+                        <tr>
+                            <td><label style="cursor: pointer;"><input type="radio" name="rdoChartTransparent" checked="checked" onclick="javascript: refreshChart();" value="0" />Chart</label></td>
+                        </tr>
+                        <tr>
+                            <td><label style="cursor: pointer;"><input type="radio" name="rdoChartTransparent" onclick="javascript: refreshChart();" value="1" />Chart&RS Image</label></td>
+                        </tr>
+                    </table>
+            </div>
+            <div style="float:left; padding-top:10px; width:470px; padding-left:10px; height:130px; padding-right:10px;border-top:2px solid #409f89; border-right:2px solid #409F89; ">
+                  <h6>CSBOOL</h6>
+                    <table>
+                        <tr>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL"  value="1" checked="checked" onclick="javascript: refreshChart();" />Lights</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL"  value="2" checked="checked" onclick="javascript: refreshChart();"/>Text</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="3" onclick="javascript: refreshChart();" />Symbol Fail</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="4" onclick="javascript: refreshChart();"/>Shallow Pattern</label></td>
+                        </tr>
+                        <tr>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="5" onclick="javascript: refreshChart();" />Overscale</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="6" onclick="javascript: refreshChart();"/>InfoPoints</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="7" onclick="javascript: refreshChart();" />Grid</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="8" checked="checked" onclick="javascript: refreshChart();"/>Shallow Soundings</label></td>
+                        </tr>
+                        <tr>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="9" checked="checked" onclick="javascript: refreshChart();" />Deep Soundings</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="10" onclick="javascript: refreshChart();"/>Two Shades</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="11" onclick="javascript: refreshChart();" />Gray Shades</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="12" onclick="javascript: refreshChart();"/>Chart SCAMIN</label></td>
+                        </tr>
+                        <tr>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="13" onclick="javascript: refreshChart();" />Auto SCAMIN</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="14" onclick="javascript: refreshChart();"/>Chart Boundaries</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="15" checked="checked" onclick="javascript: refreshChart();" />Contour Lables</label></td>
+                            <td><label style="cursor: pointer;"><input type="checkbox" name="cbxChartCSBOOL" value="16" checked="checked" onclick="javascript: refreshChart();"/>National Text</label></td>
+                        </tr>
+                    </table>
+              </div>
+            </div>
+         
+        </div>
+       
+      </div>
+    </div>
+  </div>
+    
+
+ 
+
+    <!-- 侧边工具栏 -->
+    
+    <div class="side-menu">
+        <div class="btn-group-vertical" role="group">
+
+          <button type="button" class="btn position-tooltip" data-toggle="modal" data-target="#position-modal" id="pos" data-placement="left" title="坐标定位">
+            <i class="fas fa-crosshairs"></i>
+          </button>
+          
+        </div>
+     
+    </div>
+   
+    <!-- 坐标定位模态框 -->
+    <div class="modal" id="position-modal" data-backdrop="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">坐标定位</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">纬度</label>
+              <div class="col-sm-5">
+                <input class="form-control" id="pos1" placeholder="度">
+              </div>
+              <div class="col-sm-5">
+                <input class="form-control" id="pos2" placeholder="分">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">经度</label>
+              <div class="col-sm-5">
+                <input class="form-control" id="pos3" placeholder="度">
+              </div>
+              <div class="col-sm-5">
+                <input class="form-control" id="pos4" placeholder="分">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="pan-to-pos">定位</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 船舶符号模态框 -->
+    <div class="modal" id="ship-signal-modal" data-backdrop="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">船舶符号</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img src="./img/shipsign.jpg">
+            
+          </div>
+         
+        </div>
+      </div>
+    </div>
+
+
+     <!-- 气象信息模态框 -->
+     <div class="modal" id="weather-box" data-backdrop="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">气象信息</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row mb-3">
+              <div class="col pre-time"><i class="fas fa-angle-left"></i></div>
+              <div class="col-8">
+                <select class="form-control weather-timer">
+                  <!-- <option>2020-4-6 14:00:00</option> -->
+                </select>
+              </div>
+              <div class="col next-time"><i class="fas fa-angle-right"></i></div>
+
+            </div>
+            
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><label for="" class="mr-3">风速:</label><spanp>4.1米/每秒</span></li>
+              <li class="list-group-item"><label for="" class="mr-3">风向:</label><spanp>201.8度</spanp></li>
+              <li class="list-group-item"><label for="" class="mr-3">浪高:</label><spanp>1.7米</spanp></li>
+              <li class="list-group-item"><label for="" class="mr-3">浪向:</label><spanp>170度</spanp></li>
+              <li class="list-group-item"><label for="" class="mr-3">温度:</label><spanp>24.6摄氏度</spanp></li>
+              <li class="list-group-item"><label for="" class="mr-3">气压:</label><spanp>1006hPa</spanp></li>
+            </ul>
+            
+          </div>
+         
+        </div>
+      </div>
+    </div>
+
+    <!-- 测绘工具 -->
+    <select id="typeMeasure" class=""> 
+      <option value="length">线条</option>
+      <option value="area">区域</option>
+      <option value="clear">清除</option>
+    </select>    
+
+   
+    <!-- 图层加载、显示 -->
+    <script id="baseMap" type="text/javascript" src="./js/baseMap.js"></script>
+
+    <script src="./js/position.js"></script>
+    <script src="./js/covertjson.js"></script>
+    <script src="./js/shipInfo.js"></script>
+  </body>
+</html>

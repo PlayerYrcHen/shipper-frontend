@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>温度显示</title>
+    <link rel="stylesheet" href="./layui/css/layui.css"  media="all">
+</head>
+<body>
+<script src="./layui/layui.js"></script>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+
+<!--<form id="login" >-->
+<!--    请输入船舶id：<input name="id" placeholder=" 例如：ZJ8411" type="text"/>-->
+<!--    <input type="button" name="submit" value="查询" onclick="getFormInfo();">-->
+<!--</form>-->
+<div>
+    <form class="form-inline" id="login"  >
+        <div class="form-group">
+            <div>
+<!--                <label for="exampleInputName2">船舶id：</label>-->
+<!--                <input type="text" class="form-control" id="exampleInputName2" name="id"   placeholder="请输入...">-->
+                <label for="exampleInputName2">船舶id：</label>
+                    <select id="exampleInputName2" name="id"   lay-verify="required"  type="text"  class="select">
+                        <option value="ZJ8411" >请选择船舶id</option>
+                    </select >
+                <label for="exampleInputName3">起始时间：</label>
+                <input type="datetime-local" class="form-control" id="exampleInputName3"   name="begintime"    >
+                <label for="exampleInputName4">结束时间：</label>
+                <input type="date" class="form-control" id="exampleInputName4" name="endtime"   >
+            </div>
+        </div>
+<!--        <button type="button"  name="submit" onclick="getFormInfo();">提交查询</button>-->
+        <button type="button" class="layui-btn" name="submit" onclick="getFormInfo();">查询</button>
+    </form>
+</div>
+<script>
+    $(function f(){
+        layui.use('form',function(){
+            var $ = layui.jquery
+            var form = layui.form
+            $.ajax({
+                url: 'http://localhost:8080/show',
+                dataType: 'json',
+                type: 'post',
+                success: function(data) {
+                    for (var index = 0;index < data.length;index++){
+                        var dataTmp = data[index];
+                        $('#exampleInputName2').append(new Option( dataTmp.vesselid));//往下拉菜单里添加元素
+                    }
+                    //重新渲染
+                    form.render("select");
+                }
+            });
+        });
+    })
+</script>
+<div id="main" style="height: calc(80vh); width: 100%;"></div>
+<script type="text/javascript">
+    function getFormInfo(){
+        var params=$('#login').serialize(); //把id为login的form表单里的参数自动封装为参数传递
+        console.log(params);
+        $.ajax({
+            url:  "http://localhost:8080/temp",
+            type: "POST",
+            data:params,
+            cache:false,
+            dataType: "json",
+            success: function(data){
+                console.log(data.tcase)
+                console.log(data.baseDateTime)
+                var myChart = echarts.init(document.getElementById('main'));
+                // 指定图表的配置项和数据
+                var option = {
+                    xAxis: {
+                        type: 'category',
+                        data: data.baseDateTime,
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    legend: {
+                        data: ['机箱温度(℃)', '能见度（米）','湿度（%）', '电压（V）','航速（kn）'
+                            ,'盐度','风速（m/s）','气压（ hPa）', '气温(℃)','水温(℃)',],
+                        selected:{'机箱温度(℃)':true, '能见度（米）':true,'湿度（%）':true,
+                            '电压（V）':false,'航速（kn）':true,'盐度':true,'风速（m/s）':true,
+                            '气压（ hPa）':false, '气温(℃)':true,'水温(℃)':true,},
+                    },
+                    tooltip: {
+
+                        trigger: 'axis',
+                       // formatter: '时间：{b0} <br/>数据：{c0}'
+                    },
+
+                    series: [
+                        {
+                            name: '机箱温度(℃)',
+                            data: data.tcase,
+                            type: 'bar',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name:  '能见度（米）',
+                            data: data.visibility,
+                            type: 'line',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name: '湿度（%）',
+                            data: data.humidity,
+                            type: 'line',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name:'电压（V）',
+                            data: data.voltage,
+                            type: 'line',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name: '航速（kn）',
+                            data: data.sog,
+                            type: 'line',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name: '盐度',
+                            data: data.salinity,
+                            type: 'line',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name: '风速（m/s）',
+                            data: data.windspeed,
+                            type: 'line',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name: '气压（ hPa）',
+                            data: data.pressure,
+                            type: 'line',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name: '气温(℃)',
+                            data: data.airTemperature,
+                            type: 'bar',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        {
+                            name: '水温(℃)',
+                            data: data.watertemperature,
+                            type: 'bar',
+                            color:'rgba(220, 0, 220, 0.8)',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(220, 220, 220, 0.8)'
+                            }
+                        },
+                        ]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            },
+            error:function(err){
+                console.log(err)
+            }
+        });
+    }
+</script>
+</body>
+</html>
